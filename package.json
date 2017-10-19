@@ -1,0 +1,21 @@
+{
+  "name": "crypto_notepad",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/app.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egri4stk/crypto_notepad.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/egri4stk/crypto_notepad/issues"
+  },
+  "homepage": "https://github.com/egri4stk/crypto_notepad#readme"
+}
