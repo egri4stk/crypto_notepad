@@ -1,19 +1,23 @@
-var express = require('express');
+"use strict";
 
-var path = require('path');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
 
-var app = express();
-var router = require('./router.js');
+const {
+	logController,
+	handleError
+} = require('./controllers');
+
+const app = express();
+const router = require('./router.js');
 
 app.use(bodyParser.json());
 app.use(express.static(path.normalize(__dirname + '/../client')));
 
-app.use('/',router);
-
-app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/index.html'));
-});
+app.use('*', logController);
+app.use('/', router);
+app.use('*', handleError);
 
 
 app.listen(3000, function () {
