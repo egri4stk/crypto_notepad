@@ -3,6 +3,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const db = require('./db/db.js');
 
 const {
 	logController,
@@ -13,6 +14,10 @@ const app = express();
 const router = require('./router.js');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
+
 app.use(express.static(path.normalize(__dirname + '/../client')));
 
 app.use('*', logController);

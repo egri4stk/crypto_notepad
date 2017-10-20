@@ -1,0 +1,102 @@
+.container{
+	display: flex;
+	background-color: azure;
+	height: 100px;
+	width: 100%;
+	align-items: center;
+    justify-content: center; 
+    overflow: auto; 
+}
+
+.main_title{
+	
+}
+
+.form_container{
+    
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    overflow: auto; 
+	margin-bottom: 30px;
+}
+
+.input_div{
+	display: grid
+ }
+
+ .input{
+ 	height: 30px;
+ 	width: 200px;
+ 	    border-radius: 10px;
+
+ }
+
+.login_span{
+	margin-right: 20px;
+}
+
+.input_form{
+	margin-top: 100px; 
+	padding: 50px;
+	background-color: #E4FEFF;
+}
+
+.input_button{
+	margin-top: 5%;
+    flex-grow: 1;
+}
+
+.but_div{
+	display: flex;
+
+}
+
+#errorId{
+	text-align: center;
+    padding-top: 10px;
+    font-size: medium;
+}
+
+.panel{
+	width: 10%;
+}
+
+.panel2{
+	width: 20%;
+}
+
+.content{
+	margin: 10px;
+	height: 500px;
+	width: 70%;
+}
+
+.top{
+	display: flex;
+	    width: 100%;
+}
+
+.button{
+	width: 100%;
+	margin-top: 50px;
+}
+
+.select{
+	margin-top: 10px;
+	width: 100%;
+	height: 40px;
+}
+
+.text_area{
+	padding-top: 20px;
+	margin-top: 20px;
+	width: 100%;
+	height: 60%;
+	border: solid;
+}

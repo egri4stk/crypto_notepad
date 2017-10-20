@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const userScheme = mongoose.Schema({
-    login: String,
-    password: String
+    login: { type: String, required: true, unique: true },
+    password: { type: String, required: true }
 });
 
 module.exports = {

@@ -1,5 +1,9 @@
 'use strict';
 
+const userMethods = require('./db/methods/userMethods');
+const textMethods = require('./db/methods/textMethods');
+const jwt = require('./service');
+
 const logController = (req, res, next) =>{
 	console.log(req.method, req.url, req.params);//, req.headers);
 	next();
@@ -29,10 +33,56 @@ const homeController = (req, res, next) =>{
 	res.send('Home page ^_^');
 }
 
+const createAccountController = (req, res, next) =>{
+	userMethods.createUser(req.body.login, req.body.password, (err)=>{
+		if(!err){
+			res.send({err:null,msg:'User created!'});
+			return;
+		}
+		handleError(err, req, res, next);
+	});
+}
+
+const loginController = (req, res, next) => {
+	userMethods.loginUser(req.body.login, req.body.password, (err, data)=>{
+		if(!err){	
+			const token = jwt.generateToken({login: data[0].login})
+			res.send({err:null,msg:'Login success!', token: token});
+			return;
+		}
+		handleError(err, req, res, next);
+	});
+}
+
+const getAllTextsController = (req, res, next) => {
+	textMethods.getTexts((err,data)=>{
+		if(!err){
+			res.send({err:null,texts:data});
+			return;
+		}
+		handleError(err, req, res, next);
+	});
+	
+}
+
+const getTextController = (req,res,next) =>{
+	textMethods.getText(req.query.id,(err,data)=>{
+		if(!err){
+			res.send({err:null,text:data});
+			return;
+		}
+		handleError(err, req, res, next);
+	});
+}
+
 module.exports = {
-	logController : logController,
-	sessionController : sessionController,
-	methodNotAllowedController : methodNotAllowedController,
-	handleError : handleError,
-	homeController : homeController
+	logController,
+	sessionController,
+	methodNotAllowedController,
+	handleError,
+	homeController,
+	createAccountController,
+	loginController,
+	getAllTextsController,
+	getTextController
 }
