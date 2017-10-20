@@ -3,6 +3,7 @@
 const userMethods = require('./db/methods/userMethods');
 const textMethods = require('./db/methods/textMethods');
 const jwt = require('./service');
+const aesOfb = require('./crypto');
 
 const logController = (req, res, next) =>{
 	console.log(req.method, req.url, req.params);//, req.headers);
@@ -65,14 +66,55 @@ const getAllTextsController = (req, res, next) => {
 	
 }
 
-const getTextController = (req,res,next) =>{
-	textMethods.getText(req.query.id,(err,data)=>{
+const keyController = (req, res, next) => {
+	const token = req.query.token;
+	jwt.decodeToken(token, (err,decode)=>{
 		if(!err){
-			res.send({err:null,text:data});
+			const user = decode.login;
+			userMethods.getUserSecret(user, (err, key)=>{
+				if(!err){
+					res.send({err:null,key:key});
+					return;
+				}
+				handleError(err, req, res, next);
+				return;
+			});
 			return;
 		}
 		handleError(err, req, res, next);
 	});
+
+}
+
+const getTextController = (req,res,next) =>{
+	const id = req.query.id;
+	const token = req.query.token;
+
+	jwt.decodeToken(token, (err,decode)=>{
+		if(!err){
+			const user = decode.login;
+			userMethods.getUserSecret(user, (err, key)=>{
+				if(!err){
+					textMethods.getText(id,(err,data)=>{
+						if(!err){
+							const encryptData = aesOfb.encryptText(data,key);
+							res.send({err:null,text:encryptData});
+							return;
+						}
+						handleError(err, req, res, next);
+						return;
+					});
+					return;
+				}
+				handleError(err, req, res, next);
+				return;
+
+			});
+			return;
+		}
+		handleError(err, req, res, next);
+	});
+	 
 }
 
 module.exports = {
@@ -84,5 +126,6 @@ module.exports = {
 	createAccountController,
 	loginController,
 	getAllTextsController,
-	getTextController
+	getTextController,
+	keyController
 }

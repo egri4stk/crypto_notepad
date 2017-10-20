@@ -1,3 +1,4 @@
+
 const session = checkSession().session;
 console.log(session);
 
@@ -105,6 +106,7 @@ function _initElements(){
 					$( "select" )
 					  .change(function() {
 					    $('.text_area').text('');
+					    $('#decode').prop( "disabled", false);
 					    let str = "";
 					    let id;
 					    $( "select option:selected" ).each(function() {
@@ -125,6 +127,12 @@ function _initElements(){
 				   		location.reload();
 
   					 });
+
+
+					$('#decode').click(function(){
+						_decodeText();
+						$('#decode').prop( "disabled", true);
+					});
 	}
 }
 	
@@ -179,7 +187,7 @@ function loadText(id,callback){
 	    ({
 	        type: "GET",
 	        //the url where you want to sent the userName and password to
-	        url: '/getText/?id='+id,
+	        url: '/getText/?id='+id+'&token='+localStorage["token"],
 	        contentType : 'application/json',
 	        async: false,
 	        //json object to sent to the authentication url
@@ -192,8 +200,50 @@ function loadText(id,callback){
 	    });	
 }
 
+function _decodeText(){
+	$.ajax
+	    ({
+	        type: "GET",
+	        //the url where you want to sent the userName and password to
+	        url: '/getSecretKey/?token='+localStorage["token"],
+	        contentType : 'application/json',
+	        async: false,
+	        //json object to sent to the authentication url
+	        success: function (response) {
+	        	
+	        	key_ = response.key;
+				const text = $('.text_area').text();
+				const key_arr = toUTF8Array(key_);
+				const key = key_arr.slice(0,16);
+				const iv = key_arr.slice(-16);
+
+				let encryptedBytes = aesjs.utils.hex.toBytes(text);
+				let aesOfb = new aesjs.ModeOfOperation.ofb(key, iv);
+				let decryptedBytes = aesOfb.decrypt(encryptedBytes);
+				let answer =  aesjs.utils.utf8.fromBytes(decryptedBytes);
+				$('.text_area').text(answer);
+	        	// callback(null,answer);
+	        },
+	        error: function(err){
+			   // console.log(err);
+			}
+	    });	
+
+
+}
+
+function toUTF8Array(str) {
+    var utf8= unescape(encodeURIComponent(str));
+    var arr= new Array(utf8.length);
+    for (var i= 0; i<utf8.length; i++)
+        arr[i]= utf8.charCodeAt(i);
+    return arr;
+}
+
+
 $(function() {
     console.log( "ready!" );
+
     _initElements();
 });
 

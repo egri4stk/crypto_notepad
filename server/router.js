@@ -5,7 +5,8 @@ const {
 	loginController,
 	createAccountController,
 	getAllTextsController,
-	getTextController
+	getTextController,
+	keyController
 } = require('./controllers');
 
 router
@@ -13,6 +14,7 @@ router
 	.post('/login', loginController)
 	.get('/getAllTexts', getAllTextsController)
 	.get('/getText', getTextController)
+	.get('/getSecretKey', keyController)
 	.get('*', (req,res,next)=>{
 		res.sendFile(path.normalize(__dirname+'/../client/index.html'));
 	});
